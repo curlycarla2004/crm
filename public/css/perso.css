@@ -1,0 +1,82 @@
+:root{
+    --primary: #21409a;
+}
+
+/* Background imagine login form */
+.authenticate-bg {    
+    background: url(../images/authentication/login-background.svg);    
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;    
+}
+
+/* With of logo homepage */
+.logobar .logo img {
+    width: 80px;
+}
+
+/* size logo mobile */
+.topbar-mobile .mobile-logobar img {
+    width: 60px;
+  }
+
+/* hover color menu left */
+.vertical-menu > li:hover > a {
+    background-color: rgba(172, 172, 180, 0.1);
+    color: #93c7ec;
+    opacity: 1;
+}
+
+/* Color on active of vertical menu */
+.vertical-menu > li.active > a {
+    font-weight: 400;
+    background-color: rgba(172, 172, 180, 0.1);
+    color: #93c7ec;
+    opacity: 1;
+}
+
+.btn-primary{
+    background-color: #21409a;
+    border-color: #21409a;
+}
+
+/* START dashboard event hover color in calendar */
+.fc .fc-list-event:hover td {
+    background-color: #93c7ec !important;
+    background-color: #93c7ec !important;
+}
+
+.fc .fc-list-event:hover td {
+    background-color: #93c7ec;
+    background-color: #93c7ec;
+}
+
+.fc-event {
+    background-color: #0339a1;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 5px 5px;
+    cursor: move;
+  }
+/* END dashboard event hover color in calendar */
+
+/* Flash alert message margins */
+.alert{
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+/* modal header color changed */
+.modal-header {
+    background-color: #0339a1;
+    border: 1px solid #0339a1;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+/* Buttons of full calendar responsive on mobile */
+@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {font-size: 60%}}

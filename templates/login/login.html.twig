@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+<div id="containerbar" class="containerbar authenticate-bg">
+    <!-- Start Container -->
+    <div class="container">
+        <div class="auth-box login-box">
+            <!-- Start row -->
+            <div class="row no-gutters align-items-center justify-content-center">
+                <!-- Start col -->
+                <div class="col-md-6 col-lg-5">
+                    <!-- Start Auth Box -->
+                    <div class="auth-box-right">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="post">
+                                    <div class="form-head">
+                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                        {% if error %}
+                                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                        {% endif %}
+                                        <a href="{{ path('site') }}" class="logo"><img src="{{ asset('images/crm-logo.svg') }}" class="img-fluid" alt="logo"></a>
+                                    </div>
+                                    <br><br>
+                                    <div class="form-group">
+                                        <label for="inputEmail">Email</label>
+                                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" placeholder="Email ID" class="form-control" autocomplete="email" required autofocus>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword">Password</label>
+                                        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" autocomplete="current-password" required>
+                                    </div>
+                                    <div class="form-row mb-3">
+                                        <div class="col-sm-12">
+                                          <div class="forgot-psw"> 
+                                            <a id="forgot-psw" href="user-forgotpsw.html" class="font-14">Forgot Password?</a>
+                                          </div>
+                                        </div>
+                                    </div>                          
+                                  <button type="submit" class="btn btn-primary btn-lg btn-block font-18">Sign in</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Auth Box -->
+                </div>
+                <!-- End col -->
+            </div>
+            <!-- End row -->
+        </div>
+    </div>
+    <!-- End Container -->
+</div>
+{% endblock %}

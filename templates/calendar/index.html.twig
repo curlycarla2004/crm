@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendar!{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+        <!-- Start css -->
+        <!-- Switchery css -->
+        <link href="{{ asset('plugins/switchery/switchery.min.css') }}" rel="stylesheet">
+        <!-- apex css -->
+        <link href="{{ asset('plugins/apexcharts/apexcharts.css') }}" rel="stylesheet">
+        <!-- Slick css -->
+        <link href="{{ asset('plugins/slick/slick.css') }}" rel="stylesheet">
+        <link href="{{ asset('plugins/slick/slick-theme.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/icons.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/flag-icon.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
+        <!-- End css -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css">
+        <link href="{{ asset('css/perso.css') }}" rel="stylesheet" type="text/css">
+        <style>
+            #calendar{
+                width: 80%;
+                margin: auto;
+            }
+        </style>
+{% endblock %}    
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}    
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/modernizr.min.js') }}"></script>
+    <script src="{{ asset('js/detect.js') }}"></script>
+    <script src="{{ asset('js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('js/vertical-menu.js') }}"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.js"></script>
+    <script>
+      window.onload = () => {
+          let calendarElt = document.querySelector("#calendar")
+          let calendar = new FullCalendar.Calendar(calendarElt, {
+              contentHeight: 600,
+              initialView: 'timeGridWeek',
+              selectable: true,
+              locale: 'fr',
+              timeZone: 'Europe/Paris',
+              headerToolbar: {
+                  start: 'prev,next today',
+                  center: 'title',
+                  end: 'dayGridMonth,timeGridWeek'
+              },
+
+              events: {{ data|raw }},
+              editable: true,
+              eventStartEditable: true,
+              eventDurationEditable: true,
+              selectable: true,
+              eventResizableFromStart: true,
+              businessHours: {
+                daysOfWeek: [ 1, 2, 3, 4, 5 ], // Monday - Friday
+                startTime: '8:00', // a start time 
+                endTime: '18:00', // an end time 
+              },
+
+              slotMinTime: "08:00:00", // hours available to be seen on calendar
+              slotMaxTime: "19:00:00",
+              nowIndicator: true,
+              eventDrop: function(info) {
+                  if(!confirm("Are you sure about the change?")){
+                    info.revert();
+                  }
+              },
+              
+              eventClick: function(event, element){
+                $('.modal').modal('show');
+                $('.modal').find('#title').val(event.event.title);
+                $('.modal').find('#description').val(event.event.extendedProps.description);
+                $('.modal').find('#starts-at').val(event.event.start);
+                $('.modal').find('#ends-at').val(event.event.end);
+                $('.modal').find('#allday').val(event.event.allDay);
+                
+              }
+          })
+
+          calendar.on('eventChange', (e) => {
+              let url = `/api/${e.event.id}/edit`
+              let donnees = {
+                  "title": e.event.title,
+                  "description": e.event.extendedProps.description,
+                  "start": e.event.start,
+                  "end": e.event.end,
+                  "backgroundColor": e.event.backgroundColor,
+                  "allDay": e.event.allDay
+
+              }
+              
+              let xhr = new XMLHttpRequest
+              xhr.open("PUT", url)
+              xhr.send(JSON.stringify(donnees))
+          })
+          calendar.render()
+      }
+  </script>
+{% endblock %}
+
+
+{% block body %}
+
+<!-- Header --> 
+{% include 'site/header-user.html.twig' %}
+
+<!-- Start Breadcrumbbar -->                    
+<div class="breadcrumbbar">
+    <div class="row align-items-center">
+        <div class="col-md-8 col-lg-8">
+            <h4 class="page-title">Calendar</h4>
+            <div class="breadcrumb-list">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Calendar</li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4">
+            <div class="widgetbar">
+                <a href="{{ path('event_new') }}"><button class="btn btn-primary"><i class="mdi mdi-account-plus"></i>Add Event</button></a>
+            </div>                        
+        </div>
+    </div>          
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- Start Contentbar -->    
+<div class="contentbar">
+    <div id='calendar'></div>
+    
+    <div class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Edit event</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label class="col-xs-4" for="title">Event title</label>
+                            <input type="text" name="title" id="title" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label class="col-xs-4" for="description">Event description</label>
+                            <input type="text" name="description" id="description" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label class="col-xs-4" for="starts-at">Starts at</label>
+                            <input type="text" name="starts_at" id="starts-at" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label class="col-xs-4" for="ends-at">Ends at</label>
+                            <input type="text" name="ends_at" id="ends-at" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label class="col-xs-4" for="allDay">All Day</label>
+                            <input type="text" name="allDay" id="allDay" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-event">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+<!-- End Contentbar -->
+
+<!-- Footer --> 
+{% include 'site/footer-user.html.twig' %}   
+
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile of {{ app.user.FirstName }}  {{ app.user.LastName }}{% endblock %}
+
+{% block body %}
+<!-- Header --> 
+{% include 'site/header-user.html.twig' %}
+
+<!-- Start Breadcrumbbar -->                    
+<div class="breadcrumbbar">
+    <div class="row align-items-center">
+        <div class="col-md-12 col-lg-12">
+            <h4 class="page-title">My Account</h4>
+            <div class="breadcrumb-list">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                </ol>
+            </div>
+        </div>
+    </div>          
+</div>
+<!-- End Breadcrumbbar -->
+
+<br>
+<!-- Show errors -->
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<!-- Start Contentbar -->    
+<div class="contentbar">                
+    <!-- Start row -->
+    <div class="row">
+        <!-- Start col -->
+        <div class="col-lg-5 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-header">                                
+                    <h5 class="card-title mb-0">My Account</h5>
+                </div>
+                <div class="card-body">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <a class="nav-link mb-2 active" id="v-pills-dashboard-tab" data-toggle="pill" href="#v-pills-dashboard" role="tab" aria-controls="v-pills-dashboard" aria-selected="true"><i class="ri-profile-fill mr-2"></i>My profile</a>
+                        <a class="nav-link mb-2" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="ri-pencil-line mr-2"></i>Edit Profile</a>
+                        <a class="nav-link text-danger" id="v-pills-logout-tab" data-toggle="pill" href="#v-pills-logout" role="tab" aria-controls="v-pills-logout" aria-selected="false"><i class="ri-shut-down-line mr-2"></i>Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End col -->
+        <!-- Start col -->
+        <div class="col-lg-7 col-xl-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- Dashboard Start -->
+                <div class="tab-pane fade show active" id="v-pills-dashboard" role="tabpanel" aria-labelledby="v-pills-dashboard-tab">
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Dashboard</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="profilebox py-4 text-center">
+                                <img src="{{asset('uploads/' ~ user.image )}}" class="img-fluid mb-3" alt="profile">
+                                <div class="profilename">
+                                    <h5>{{ app.user.FirstName }} {{app.user.LastName }}</h5>
+                                    <p><b>Email:</b> {{ app.user.email }}</p>
+                                    <p><b>Phone number:</b> {{ app.user.phone }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Dashboard End -->
+
+                <!-- My Profile Start -->
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Edit Profile Informations</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url('update_profile', {id:app.user.id}) }}" enctype="multipart/form-data">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="firstname">First Name</label>
+                                        <input type="text" class="form-control" id="firstname" name="firstname" value="{{ app.user.firstname }}">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="lastname">Last Name</label>
+                                        <input type="text" class="form-control" id="lastname" name="lastname" value="{{ app.user.lastname }}">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="phone">Mobile Number</label>
+                                        <input type="text" class="form-control" id="phone" name="phone" value="{{ app.user.phone }}">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="image">Image</label>
+                                        <input type="file" class="form-control-file" id="image" name="image" value="{{ app.user.image }}">
+                                    </div>
+                                </div>
+                                {# <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="password">Password</label>
+                                        <input type="password" class="form-control" id="password">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="confirmedpassword">Confirmed Password</label>
+                                        <input type="password" class="form-control" id="confirmedpassword">
+                                    </div>
+                                </div> #}
+                                <button type="submit" class="btn btn-primary-rgba font-16"><i class="ri-save-line mr-2"></i>Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- My Profile End -->
+
+                <!-- My Logout Start -->
+                <div class="tab-pane fade" id="v-pills-logout" role="tabpanel" aria-labelledby="v-pills-logout-tab">
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Logout</h5>                                       
+                        </div>
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 col-xl-4">
+                                    <div class="logout-content text-center my-5">
+                                        <img src="{{ asset('images/ecommerce/logout.svg')}}" class="img-fluid mb-5" alt="logout">
+                                        <h2 class="text-success">Logout ?</h2>
+                                        <p class="my-4">Are you sure to want to Log out?</p>
+                                        <div class="button-list">
+                                            <a href="{{ path('app_logout') }}"><button type="button" class="btn btn-danger font-16"><i class="ri-check-line mr-2"></i>Yes, I'm sure</button></a>
+                                            <button type="button" class="btn btn-success font-16"><i class="ri-close-line mr-2"></i>Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- My Logout End -->                            
+            </div>                        
+        </div>
+        <!-- End col -->
+    </div>
+    <!-- End row -->                  
+</div>
+<!-- End Contentbar -->
+
+<!-- Footer --> 
+{% include 'site/footer-user.html.twig' %}   
+
+{% endblock %}

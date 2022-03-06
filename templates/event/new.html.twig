@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Events{% endblock %}
+
+{% block body %}
+<!-- Header --> 
+{% include 'site/header-user.html.twig' %}
+
+<!-- Start Breadcrumbbar -->                    
+<div class="breadcrumbbar">
+    <div class="row align-items-center">
+        <div class="col-md-8 col-lg-8">
+            <h4 class="page-title">Create new Event</h4>
+            <div class="breadcrumb-list">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('calendar') }}">Calendar</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Create new Event</li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4">
+            <div class="widgetbar">
+                <a href="{{ path('add_contact_form') }}"><button class="btn btn-primary"><i class="ri-arrow-left-line"></i>Back to list</button></a>
+            </div>                        
+        </div>
+    </div>          
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- Start Contentbar -->    
+<div class="contentbar">
+    
+    <h1>Create new Event</h1>
+    <br>
+    {{ include('event/_form.html.twig') }}
+</div>
+<!-- End Contentbar -->
+
+<!-- Footer --> 
+{% include 'site/footer-user.html.twig' %}
+
+
+{% endblock %}

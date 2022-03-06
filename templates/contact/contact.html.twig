@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact List{% endblock %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+    <!-- Switchery css -->
+    <link href="{{ asset('plugins/switchery/switchery.min.css') }}" rel="stylesheet">
+
+    <!-- DataTables css -->
+    <link href="{{ asset('plugins/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('plugins/datatables/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- Responsive Datatable css -->
+    <link href="{{ asset('plugins/datatables/responsive.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/icons.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/flag-icon.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/perso.css') }}" rel="stylesheet" type="text/css">
+    <!-- End css -->
+{% endblock %}
+
+
+
+{% block body %}
+<!-- Header --> 
+{% include 'site/header-user.html.twig' %}
+
+<!-- Start Breadcrumbbar -->                    
+<div class="breadcrumbbar">
+    <div class="row align-items-center">
+        <div class="col-md-8 col-lg-8">
+            <h4 class="page-title">Contacts</h4>
+            <div class="breadcrumb-list">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Contact table</li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-12">
+            <div class="widgetbar">
+                <a href="{{ path('create_contact') }}"><button class="btn btn-primary"><i class="mdi mdi-account-plus"></i>Add Contact</button></a>
+            </div>                        
+        </div>
+    </div>          
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- Show errors -->
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<!-- Start Contentbar -->    
+<div class="contentbar">                
+    <!-- Start row -->
+    <div class="row">
+        <!-- Start col -->
+        <div class="col-lg-12">
+            <div class="card m-b-30">
+                <div class="card-header">
+                    <h5 class="card-title">Contact table</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle">All company contacts.</h6>
+                    <div class="table-responsive table-hover">
+                        <table id="default-datatable" class="display table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for contact in contacts %}
+                                <tr>
+                                    <td>{{ contact.FirstName }}</td>
+                                    <td>{{ contact.LastName }}</td>
+                                    <td>{{ contact.phone }}</td>
+                                    <td>{{ contact.email }}</td>
+                                    <td>{{ contact.address }}</td>
+                                    <td>{{ contact.city }}</td>
+                                    <td>{{ contact.zipCode }}</td>
+                                    <td>
+                                        <a href="{{ path('edit_contact', {id:contact.id}) }}"><button class="btn btn-secondary">Edit</button></a>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
+                                        <!-- Start Modal -->
+                                        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="Delete">Delete</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p class="text-muted">Are you sure you want delete this contact?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <a href="{{ path('delete_contact', {id:contact.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Modal -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End col -->
+    </div>
+
+    
+    <!-- End row -->
+</div>
+<!-- End Contentbar -->
+
+<!-- Footer -->
+{% include 'site/footer-user.html.twig' %}
+
+{% endblock %}
+
+{% block javascripts %}
+    <!-- Start js -->        
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/modernizr.min.js') }}"></script>
+    <script src="{{ asset('js/detect.js') }}"></script>
+    <script src="{{ asset('js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('js/vertical-menu.js') }}"></script>
+    <!-- Switchery js -->
+    <script src="{{ asset('plugins/switchery/switchery.min.js') }}"></script>
+    
+    <!-- Datatable js --> 
+    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('plugins/datatables/responsive.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/custom/custom-table-datatable.js') }}"></script>
+
+    <!-- Core js -->
+    <script src="{{ asset('js/core.js') }}"></script>
+{% endblock %}

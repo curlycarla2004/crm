@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Events index{% endblock %}
+
+{% block body %}
+
+<!-- Header --> 
+{% include 'site/header-user.html.twig' %}
+
+<!-- Start Breadcrumbbar -->                    
+<div class="breadcrumbbar">
+    <div class="row align-items-center">
+        <div class="col-md-8 col-lg-8">
+            <h4 class="page-title">All Events</h4>
+            <div class="breadcrumb-list">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">CRM</li>
+                </ol>
+            </div>
+        </div>
+    </div>          
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- Start Contentbar -->    
+<div class="contentbar">
+    <h1>Events Summary</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>All_day</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.title }}</td>
+                <td>{{ event.description }}</td>
+                <td>{{ event.start ? event.start|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.end ? event.end|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.allDay ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('event_show', {'id': event.id}) }}">show</a>
+                    <a href="{{ path('event_edit', {'id': event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('event_new') }}"><button class="btn btn-primary"><i class="mdi mdi-calendar-plus"></i>Create New Event</button></a>
+   
+</div>
+<!-- End Contentbar -->
+
+<!-- Footer --> 
+{% include 'site/footer-user.html.twig' %}   
+
+    
+
+{% endblock %}

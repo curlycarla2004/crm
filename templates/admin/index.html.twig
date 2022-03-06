@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+        <!-- Start css -->
+        <!-- Switchery css -->
+        <link href="{{ asset('plugins/switchery/switchery.min.css') }}" rel="stylesheet">
+        <!-- apex css -->
+        <link href="{{ asset('plugins/apexcharts/apexcharts.css') }}" rel="stylesheet">
+        <!-- Slick css -->
+        <link href="{{ asset('plugins/slick/slick.css') }}" rel="stylesheet">
+        <link href="{{ asset('plugins/slick/slick-theme.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/icons.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/flag-icon.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/perso.css') }}" rel="stylesheet" type="text/css">
+        <!-- End css -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css">
+        <style>
+            #calendar{
+                width: 80%;
+                margin: auto;
+            }
+        </style>
+{% endblock %}   
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}    
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/modernizr.min.js') }}"></script>
+    <script src="{{ asset('js/detect.js') }}"></script>
+    <script src="{{ asset('js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('js/vertical-menu.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.js"></script>
+    <script>
+      window.onload = () => {
+          let calendarElt = document.querySelector("#calendar")
+          let calendar = new FullCalendar.Calendar(calendarElt, {
+              contentHeight: 300,
+              initialView: 'listWeek',
+              locale: 'fr',
+              timeZone: 'Europe/Paris',
+              headerToolbar: {
+                  start: 'prev,next today',
+                  center: 'title',
+                  end: 'dayGridMonth,timeGridWeek'
+              },
+              events: {{ data|raw }},
+              editable: true,
+              eventResizableFromStart: true,
+              businessHours: {
+                // days of week. an array of zero-based day of week integers (0=Sunday)
+                daysOfWeek: [ 1, 2, 3, 4, 5 ], // Monday - Friday
+              
+                startTime: '8:00', // a start time (9am in this example)
+                endTime: '18:00', // an end time (6pm in this example)
+              },
+              slotMinTime: "08:00:00",
+              slotMaxTime: "19:00:00",
+          })
+          calendar.on('eventChange', (e) => {
+              let url = `/api/${e.event.id}/edit`
+              let donnees = {
+                  "title": e.event.title,
+                  "description": e.event.extendedProps.description,
+                  "start": e.event.start,
+                  "end": e.event.end,
+                  "backgroundColor": e.event.backgroundColor,
+                  "allDay": e.event.allDay
+
+              }
+              
+              let xhr = new XMLHttpRequest
+              xhr.open("PUT", url)
+              xhr.send(JSON.stringify(donnees))
+          })
+          calendar.render()
+      }
+  </script>
+{% endblock %}
+
+{% block body %}
+<!-- Header --> 
+{# {% include 'site/header-user.html.twig' %} #}
+{{ render(controller('App\\Controller\\SiteController::header')) }}
+
+<!-- Start Breadcrumbbar -->                    
+<div class="breadcrumbbar">
+    <div class="row align-items-center">
+        <div class="col-md-8 col-lg-8">
+            <h4 class="page-title">CRM</h4>
+            <div class="breadcrumb-list">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">CRM</li>
+                </ol>
+            </div>
+        </div>
+    </div>          
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- Start Contentbar -->    
+<div class="contentbar">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            <div id='calendar'></div>
+        </div>    
+        <div class="col-md-6 col-lg-6">
+            <div class="row">
+                <!-- Start col -->
+                <div class="col-lg-12">
+                    <div class="card m-b-30">
+                        <div class="card-header">
+                            <h5 class="card-title">List of users</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-subtitle">Employees list</h6>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered" id="edit-btn">
+                                    <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Phone</th>
+                                            <th>Email</th>
+                                            <th>Image</th>
+                                            <th>Action</th>                                                
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                        <tr>
+                                            <td>{{ user.FirstName }}</td>
+                                            <td>{{ user.LastName }}</td>
+                                            <td>{{ user.phone }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td><img src="{{asset('uploads/' ~ user.image )}}" class="img-fluid mb-3" alt="profile" style="max-width: 50%;"></td>
+                                            <td>
+                                                <a href="{{ path('edit_company', {id:user.id}) }}"><button class="btn btn-secondary">Edit</button></a> 
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
+                                                <!-- Start Modal -->
+                                                <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="Delete">Delete</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p class="text-muted">Are you sure you want delete this company?</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                <a href="{{ path('delete_company', {id:user.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- End Modal -->
+                                            </td>
+                                        </tr>{% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End col -->
+            </div>
+            <!-- End row -->
+        </div>
+    </div>
+</div>
+<!-- End Contentbar -->
+
+<!-- Footer --> 
+{% include 'site/footer-user.html.twig' %}   
+
+
+{% endblock %}
+
+

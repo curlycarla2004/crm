@@ -23,8 +23,13 @@
 
 
 {% block body %}
+
 <!-- Header --> 
-{% include 'site/header-user.html.twig' %}
+{% if is_granted('ROLE_ADMIN') %} 
+    {% include 'site/header-admin.html.twig' %}
+{% else %}
+    {% include 'site/header-user.html.twig' %}
+{% endif %}
 
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
@@ -149,7 +154,7 @@
 </div>
 <!-- End Contentbar -->
 
-<!-- Footer -->
+<!-- Footer --> 
 {% include 'site/footer-user.html.twig' %}
 
 {% endblock %}

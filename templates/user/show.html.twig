@@ -3,8 +3,13 @@
 {% block title %}Welcome {{ app.user.FirstName }} {% endblock %}
 
 {% block body %}
+
 <!-- Header --> 
-{% include 'site/header-user.html.twig' %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% include 'site/header-admin.html.twig' %}
+{% else %}
+    {% include 'site/header-user.html.twig' %}
+{% endif %}
 
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
@@ -160,9 +165,9 @@
     </div>
     <!-- End row -->                  
 </div>
-<!-- End Contentbar -->
+<!-- End Contentbar --> 
 
 <!-- Footer --> 
-{% include 'site/footer-user.html.twig' %}   
+{% include 'site/footer-user.html.twig' %}
 
 {% endblock %}

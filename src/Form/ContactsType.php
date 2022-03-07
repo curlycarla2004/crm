@@ -22,27 +22,17 @@ class ContactsType extends AbstractType
         $builder
             ->add('FirstName', TextType::class, [
                 'constraints' => [
-                    new NotNull([
-                        'message' => 'Please enter the new contact name.'
-                    ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'The first name has to have at least {{ limit }} letters.',
                         'max' => 50,
-                        'maxMessage' => 'The first name cannot contain more than {{ limit }} letters.',
                     ]),
                 ],
             ])
             ->add('LastName', TextType::class, [
                 'constraints' => [
-                    new NotNull([
-                        'message' => 'Please enter the new contact name.'
-                    ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'The last name has to have at least {{ limit }} letters.',
                         'max' => 50,
-                        'maxMessage' => 'The last name cannot contain more than {{ limit }} letters.',
                     ]),
                 ],
             ])
@@ -56,17 +46,8 @@ class ContactsType extends AbstractType
             ])
             ->add('address', TextType::class)
             ->add('city', TextType::class)
-            ->add('zipCode')
-            ->add('country', ChoiceType::class, [
-                'choices' => [
-                    'France' => 'France',
-                    'USA' => 'USA',
-                    'Germany' => 'Germany',
-                    'Czech Republic' => 'Czech Republic',
-
-                ],
-                'preferred_choices' => ['France'],
-            ])
+            ->add('zipCode', TextType::class)
+            ->add('country', TextType::class)
             ->add('phone', TelType::class, [
                 'constraints'=> [
                     new Regex([

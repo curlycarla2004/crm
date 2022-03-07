@@ -23,8 +23,13 @@
 
 
 {% block body %}
+
 <!-- Header --> 
-{% include 'site/header-user.html.twig' %}
+{% if is_granted('ROLE_ADMIN') %} 
+    {% include 'site/header-admin.html.twig' %}
+{% else %}
+    {% include 'site/header-user.html.twig' %}
+{% endif %}
 
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
@@ -69,6 +74,7 @@
                 <div class="card-header">
                     <h5 class="card-title">Companies</h5>
                 </div>
+                {% if is_granted('ROLE_ADMIN') %} 
                 <div class="card-body">
                     <h6 class="card-subtitle">All companies working with us.</h6>
                     <div class="table-responsive table-hover">
@@ -94,7 +100,7 @@
                                     <td>{{ company.city }}</td>
                                     <td>{{ company.zipCode }}</td>
                                     <td>
-                                        <a href="{{ path('edit_company', {id:company.id}) }}"><button class="btn btn-secondary">Edit</button></a> 
+                                        <a href="{{ path('edit_company_admin', {id:company.id}) }}"><button class="btn btn-secondary">Edit</button></a> 
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
                                         <!-- Start Modal -->
                                         <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
@@ -111,7 +117,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <a href="{{ path('delete_company', {id:company.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                                        <a href="{{ path('delete_company_admin', {id:company.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -135,17 +141,56 @@
                         </table>
                     </div>
                 </div>
+                {% else %}
+                <div class="card-body">
+                    <h6 class="card-subtitle">All companies working with us.</h6>
+                    <div class="table-responsive table-hover">
+                        <table id="default-datatable" class="display table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Company name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for company in companies %}
+                                <tr>
+                                    <td>{{ company.name }}</td>
+                                    <td>{{ company.email }}</td>
+                                    <td>{{ company.phone }}</td>
+                                    <td>{{ company.address }}</td>
+                                    <td>{{ company.city }}</td>
+                                    <td>{{ company.zipCode }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Company name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
         <!-- End col -->
-
-        
     </div>
     <!-- End row -->
 </div>
 <!-- End Contentbar -->
 
-<!-- Footer -->
+<!-- Footer --> 
 {% include 'site/footer-user.html.twig' %}
 
 {% endblock %}

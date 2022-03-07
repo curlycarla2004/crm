@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Companies;
 use App\Entity\Contacts;
 use App\Entity\User;
+use App\Form\ContactsType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,11 +43,8 @@ class ContactController extends AbstractController
     public function create(): Response
     {
         return $this->render('contact/create_contact.html.twig', [
-            'controller_name' => 'ContactController',
-            'user' => 'Karla'
         ]);
     }
-
 
     /**
      * @Route("/profile/add_contact_form", name="add_contact_form")
@@ -54,6 +52,17 @@ class ContactController extends AbstractController
     public function add_contact_form(ManagerRegistry $doctrine, Request $request): Response
     {
 
+        $form = $this->createForm(ContactsType::class);
+
+        $form->submit($request->request->all());
+
+        // if (!$form->isValid()) { //validate form info in UserFormType
+        //     $errors = $form->getErrors(true); // Array of Error
+        //     foreach ($errors as $error) {
+        //         $this->addFlash('error', $error->getMessage());
+        //     }
+        //     return $this->redirectToRoute('create_contact');
+        // }
         $manager = $doctrine->getManager();
         $contact = new Contacts();
         $contact->setFirstName($request->request->get('firstname'));
@@ -68,99 +77,10 @@ class ContactController extends AbstractController
         $manager->persist($contact);
         $manager->flush();
 
-        
+        $this->addFlash('message', 'New contact has been added');
         return $this->render('contact/create_contact.html.twig', [
             'contact' => $contact,
         ]);
     }
 
-    /**
-     * @Route("/profile/edit_contact/{id}", name="edit_contact")
-     */
-    public function edit(ManagerRegistry $doctrine, Request $request, int $id): Response
-    {
-        $repository = $doctrine->getRepository(Contacts::class);
-        $contact = $repository->find($id);
-
-        if (is_null($contact)) {
-            return new Response('Not found 404', 404);
-        }
-        
-        return $this->render('contact/edit.html.twig', [
-            'contact' => $contact,
-        ]);
-    }
-
-     /**
-     * @Route("/profile/update_contact/{id}", name="update_contact")
-     */
-    public function update(Request $request, ManagerRegistry $doctrine, $id): Response
-    {
-        $repository = $doctrine->getRepository(Contacts::class);
-        $contact = $repository->find($id);
-
-        if (is_null($contact)) {
-            return new Response('Not found 404', 404);
-        }
-
-        // Set keys
-        if ($firstname = $request->request->get('firstname')) {
-            $contact->setFirstName($firstname);
-        }
-        if ($lastname = $request->request->get('lastname')) {
-            $contact->setLastName($lastname);
-        }
-        if ($email = $request->request->get('email')) {
-            $contact->setPhone($email);
-        }
-        if ($address = $request->request->get('address')) {
-            $contact->setAddress($address);
-        }
-        if ($city = $request->request->get('city')) {
-            $contact->setCity($city);
-        }
-        if ($country = $request->request->get('country')) {
-            $contact->setCountry($country);
-        }
-        if ($zipCode = $request->request->get('zipCode')) {
-            $contact->setZipCode($zipCode);
-        }
-        if ($phone = $request->request->get('phone')) {
-            $contact->setPhone($phone);
-        }
-
-
-        // Save
-        $doctrine->getManager()->flush();
-
-        $this->addFlash('message', 'The contact information has been edited.');
-
-        return $this->redirectToRoute('contact');
-    }
-
-     /**
-     * @Route("/profile/delete_contact/{id}", name="delete_contact")
-     */
-    public function delete(Request $request, ManagerRegistry $doctrine, $id): Response
-    {
-        $repository = $doctrine->getRepository(Contacts::class);
-        $contact = $repository->find($id);
-        $entityManager = $doctrine->getManager();
-
-        if (is_null($contact)) {
-            return new Response('Not found 404', 404);
-        }
-
-        // Remove
-        $entityManager->remove($contact);
-
-        // Commit
-        $entityManager->flush();
-
-        $this->addFlash('message', 'Contact has been deleted.');
-
-        return $this->redirectToRoute('contact');
-    }
-
-    
 }

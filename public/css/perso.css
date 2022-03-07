@@ -4,7 +4,7 @@
 
 /* Background imagine login form */
 .authenticate-bg {    
-    background: url(../images/authentication/login-background.svg);    
+    background: url(../images/login-background.svg);    
     background-size: cover;
     background-position: center;
     min-height: 100vh;    

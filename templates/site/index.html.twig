@@ -85,9 +85,13 @@
 {% endblock %}
 
 {% block body %}
+
 <!-- Header --> 
-{# {% include 'site/header-user.html.twig' %} #}
-{{ render(controller('App\\Controller\\SiteController::header')) }}
+{% if is_granted('ROLE_ADMIN') %} 
+    {{ render(controller('App\\Controller\\AdminController::header')) }}
+{% else %}
+    {{ render(controller('App\\Controller\\SiteController::header')) }}
+{% endif %}
 
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
@@ -116,7 +120,6 @@
 
 <!-- Footer --> 
 {% include 'site/footer-user.html.twig' %}   
-
 
 {% endblock %}
 

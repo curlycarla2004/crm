@@ -31,8 +31,7 @@ class CalendarController extends AbstractController
                 'description' =>$calendar->getDescription(),
                 'backgroundColor' =>$calendar->getBackgroundColor(),
                 'allDay' =>$calendar->getAllDay(),
-                'createdAt' =>$calendar->getCreatedAt(),
-                'User'=>$calendar->getUser()
+                'createdAt' =>$calendar->getCreatedAt()
             ];
         }
 

@@ -13,26 +13,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UserController extends AbstractController
 {
-
-    // unusefull edit delete!!!!!
-
-    /**
-     * @Route("/profile/account/edit/{id}", name="edit_profile", methods={"GET"})
-     */
-    // public function edit(Request $request, ManagerRegistry $doctrine, $id): Response
-    // {
-    //     $repository = $doctrine->getRepository(User::class);
-    //     $user = $repository->find($id);
-        
-    //     if (is_null($user)) {
-    //         return new Response('Not found 404', 404);
-    //       }
-
-    //     return $this->render('user/update_profile.html.twig', [
-    //         'user' => $user,
-    //     ]);
-    // }
-
     /**
      * @Route("/profile/account/update/{id}", name="update_profile", methods={"GET","POST"})
      */
@@ -112,4 +92,6 @@ class UserController extends AbstractController
             'users'=>$users
         ]);
     }
+
+    
 }

@@ -34,35 +34,32 @@ class ApiController extends AbstractController
             isset($donnees->title) && !empty($donnees->title) &&
             isset($donnees->start) && !empty($donnees->start) &&
             isset($donnees->description) && !empty($donnees->description) &&
-            isset($donnees->backgroundColor) && !empty($donnees->backgroundColor) &&
-            isset($donnees->title) && !empty($donnees->title) &&
-            isset($donnees->title) && !empty($donnees->title)
+            isset($donnees->backgroundColor) && !empty($donnees->backgroundColor) 
         ){
             $code = 200;
-
             if(!$events){
                 $events = new Events;
                 
                 $code = 201;
             }
+
             $events->setTitle($donnees->title);
             $events->setDescription($donnees->description);
             $events->setStart(new DateTime($donnees->start));
             if($donnees->allDay){
                 $events->setEnd(new DateTime($donnees->start));
             }else{
-                $events->setEnd(new DateTime($donnees->start));
+                $events->setEnd(new DateTime($donnees->end));
             }
-            $events->setAllDay($donnees->allDay);
             $events->setBackgroundColor($donnees->backgroundColor);
-
+            
             $em = $doctrine->getManager();
             $em->persist($events);
             $em->flush();
 
             return new Response('Ok', $code);
         }else{
-            return new Response('Données incomptes', 404);
+            return new Response('Données incompletes', 404);
         }
 
 

@@ -67,7 +67,7 @@ class SiteController extends AbstractController
     public function header(ManagerRegistry $doctrine){
         // $repository = $doctrine->getRepository(User::class);
         // $users = $repository->findBy(["first_name"=>$this->getUser()->getFirstName()]);
-        
+        $this->denyAccessUnlessGranted('ROLE_USER');
         return $this->render('site/header-user.html.twig' , [
         ]);
     }

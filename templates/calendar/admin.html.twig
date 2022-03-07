@@ -74,7 +74,6 @@
                   }
               },
               
-              //modal opened after click on event
               eventClick: function(event, element){
                 $('.modal').modal('show');
                 $('.modal').find('#title').val(event.event.title);
@@ -82,19 +81,20 @@
                 $('.modal').find('#starts-at').val(event.event.start);
                 $('.modal').find('#ends-at').val(event.event.end);
                 $('.modal').find('#allday').val(event.event.allDay);
+                $('.modal').find('#user').val(event.event.extendedProps.User);
+                
               }
           })
 
-          //when event changed it will change info in bdd
           calendar.on('eventChange', (e) => {
               let url = `/api/${e.event.id}/edit`
               let donnees = {
-                "title": e.event.title,
-                "description": e.event.extendedProps.description,
-                "start": e.event.start,
-                "end": e.event.end,
-                "backgroundColor": e.event.backgroundColor,
-                "allDay": e.event.allDay
+                  "title": e.event.title,
+                  "description": e.event.extendedProps.description,
+                  "start": e.event.start,
+                  "end": e.event.end,
+                  "backgroundColor": e.event.backgroundColor,
+                  "allDay": e.event.allDay
               }
               
               let xhr = new XMLHttpRequest
@@ -164,13 +164,19 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="starts-at">Starts at</label>
-                            <input type="text" name="starts_at" id="starts-at" />
+                            <input type="text" name="start" id="starts-at" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="ends-at">Ends at</label>
-                            <input type="text" name="ends_at" id="ends-at" />
+                            <input type="text" name="end" id="ends-at" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <label class="col-xs-4" for="user">User</label>
+                            <input type="text" name="User" id="user"/>
                         </div>
                     </div>
                 </div>

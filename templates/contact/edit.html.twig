@@ -5,8 +5,13 @@
 
 
 {% block body %}
+
 <!-- Header --> 
-{% include 'site/header-user.html.twig' %}
+{% if is_granted('ROLE_ADMIN') %} 
+    {% include 'site/header-admin.html.twig' %}
+{% else %}
+    {% include 'site/header-user.html.twig' %}
+{% endif %}
 
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
@@ -90,20 +95,6 @@
                                             required>
                                         </div>
                                     </section>
-                                    {# <h3>Summary</h3>
-                                    <section>
-                                        <h4 class="font-22 mb-3">Summary</h4>
-                                        <ul>
-                                            <li><strong>First Name :</strong> {{ contact.firstname}}</li>
-                                            <li><strong>Last Name :</strong> {{ contact.lastname}}</li>
-                                            <li><strong>Email :</strong> {{ contact.email}}</li>
-                                            <li><strong>Address :</strong> {{ contact.address}}</li>
-                                            <li><strong>City :</strong> {{ contact.city}}</li>
-                                            <li><strong>Country :</strong> {{ contact.country}}</li>
-                                            <li><strong>Zip Code :</strong> {{ contact.zipCode}}</li>
-                                            <li><strong>Phone :</strong> {{ contact.phone}}</li>
-                                        </ul>
-                                    </section> #}
                                     <h3>Finish</h3>
                                     <section>
                                         <h4 class="font-22 mb-3"></h4>

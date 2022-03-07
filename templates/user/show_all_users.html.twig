@@ -23,8 +23,13 @@
 
 
 {% block body %}
+
 <!-- Header --> 
-{% include 'site/header-user.html.twig' %}
+{% if is_granted('ROLE_ADMIN') %}
+    {% include 'site/header-admin.html.twig' %}
+{% else %}
+    {% include 'site/header-user.html.twig' %}
+{% endif %}
 
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
@@ -65,6 +70,69 @@
                 <div class="card-header">
                     <h5 class="card-title">Employees list</h5>
                 </div>
+                {% if is_granted('ROLE_ADMIN') %} 
+                <div class="card-body">
+                    <div class="table-responsive table-hover">
+                        <table id="default-datatable" class="display table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Image</th>
+                                    <th>Action</th>  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.FirstName }}</td>
+                                    <td>{{ user.LastName }}</td>
+                                    <td>{{ user.phone }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td><img src="{{asset('uploads/' ~ user.image )}}" class="img-fluid mb-3" alt="profile" style="max-width: 5%;"></td>
+                                    <td>
+                                        <a href="{{ path('edit_company', {id:user.id}) }}"><button class="btn btn-secondary">Edit</button></a> 
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
+                                        <!-- Start Modal -->
+                                        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="Delete">Delete</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p class="text-muted">Are you sure you want delete this company?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <a href="{{ path('delete_company', {id:user.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Modal -->
+                                    </td>
+                                </tr>{% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Image</th>
+                                    <th>Action</th>  
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
                 <div class="card-body">
                     <div class="table-responsive table-hover">
                         <table id="default-datatable" class="display table table-striped table-bordered">
@@ -99,6 +167,7 @@
                         </table>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         <!-- End col -->
@@ -109,7 +178,7 @@
 </div>
 <!-- End Contentbar -->
 
-<!-- Footer -->
+<!-- Footer --> 
 {% include 'site/footer-user.html.twig' %}
 
 {% endblock %}

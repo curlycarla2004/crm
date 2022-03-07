@@ -85,9 +85,13 @@
 {% endblock %}
 
 {% block body %}
+
 <!-- Header --> 
-{# {% include 'site/header-user.html.twig' %} #}
-{{ render(controller('App\\Controller\\SiteController::header')) }}
+{% if is_granted('ROLE_ADMIN') %} 
+    {% include 'site/header-admin.html.twig' %}
+{% else %}
+    {% include 'site/header-user.html.twig' %}
+{% endif %}
 
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
@@ -96,8 +100,8 @@
             <h4 class="page-title">CRM</h4>
             <div class="breadcrumb-list">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ path('site') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('admin_home') }}">Dashboard</a></li>
                     <li class="breadcrumb-item active" aria-current="page">CRM</li>
                 </ol>
             </div>
@@ -180,10 +184,7 @@
         </div>
     </div>
 </div>
-<!-- End Contentbar -->
-
-<!-- Footer --> 
-{% include 'site/footer-user.html.twig' %}   
+<!-- End Contentbar --> 
 
 
 {% endblock %}

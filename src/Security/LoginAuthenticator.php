@@ -23,9 +23,12 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
 
     private UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    private $security;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, Security $security)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->security = $security;
     }
 
     public function authenticate(Request $request): Passport
@@ -48,13 +51,12 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
-        // if($this->getUser()->hasRole('ROLE_')) {
-        //     $redirection = new RedirectResponse($this->urlGenerator->generate('site'));
-        // } else {
-        //     $redirection = new RedirectResponse($this->urlGenerator->generate('admin_home'));
-        // }
-        // return $redirection;
+        
+        // redirect to admin or user dashboard
+        $user = $token->getUser();
+        if(in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            return new RedirectResponse($this->urlGenerator->generate('admin_home'));
+        }
         return new RedirectResponse($this->urlGenerator->generate('site'));
         
     }

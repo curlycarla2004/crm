@@ -5,9 +5,14 @@
 
 
 {% block body %}
-<!-- Header --> 
-{% include 'site/header-user.html.twig' %}
 
+<!-- Header --> 
+{% if is_granted('ROLE_ADMIN') %} 
+    {% include 'site/header-admin.html.twig' %}
+{% else %}
+    {% include 'site/header-user.html.twig' %}
+{% endif %}
+    
 <!-- Start Breadcrumbbar -->                    
 <div class="breadcrumbbar">
     <div class="row align-items-center">
@@ -106,9 +111,6 @@
     <!-- End row -->
 </div>
 <!-- End Contentbar -->
-
-<!-- Footer --> 
-{% include 'site/footer-user.html.twig' %}
 
 {% endblock %}
 

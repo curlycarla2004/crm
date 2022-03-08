@@ -6,8 +6,6 @@
         <!-- Start css -->
         <!-- Switchery css -->
         <link href="{{ asset('plugins/switchery/switchery.min.css') }}" rel="stylesheet">
-        <!-- apex css -->
-        <link href="{{ asset('plugins/apexcharts/apexcharts.css') }}" rel="stylesheet">
         <!-- Slick css -->
         <link href="{{ asset('plugins/slick/slick.css') }}" rel="stylesheet">
         <link href="{{ asset('plugins/slick/slick-theme.css') }}" rel="stylesheet">
@@ -113,9 +111,13 @@
 <!-- Start Contentbar -->    
 <div class="contentbar">
     <div class="row">
+        <!-- Start calendar --> 
         <div class="col-md-6 col-lg-6">
             <div id='calendar'></div>
-        </div>    
+        </div>   
+        <!-- End calendar -->  
+
+        <!-- Start list of employees --> 
         <div class="col-md-6 col-lg-6">
             <div class="row">
                 <!-- Start col -->
@@ -182,10 +184,162 @@
             </div>
             <!-- End row -->
         </div>
+        <!-- End list of employees --> 
+
+        <!-- Start recently added contacts -->   
+        <div class="col-lg-12">
+            <div class="card m-b-30">
+                <div class="card-header">
+                    <h5 class="card-title">Recently added contacts</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table-hover">
+                        <table id="default-datatable" class="display table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for contact in contacts %}
+                                <tr>
+                                    <td>{{ contact.FirstName }}</td>
+                                    <td>{{ contact.LastName }}</td>
+                                    <td>{{ contact.phone }}</td>
+                                    <td>{{ contact.email }}</td>
+                                    <td>{{ contact.address }}</td>
+                                    <td>{{ contact.city }}</td>
+                                    <td>{{ contact.zipCode }}</td>
+                                    <td>
+                                        <a href="{{ path('edit_contact', {id:contact.id}) }}"><button class="btn btn-secondary">Edit</button></a>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
+                                        <!-- Start Modal -->
+                                        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="Delete">Delete</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p class="text-muted">Are you sure you want delete this contact?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <a href="{{ path('delete_contact_admin', {id:contact.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Modal -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End recently added contacts --> 
+
+        <!-- Start recently added companies --> 
+        <div class="col-lg-12">
+            <div class="card m-b-30">
+                <div class="card-header">
+                    <h5 class="card-title">Recently added companies</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table-hover">
+                        <table id="default-datatable" class="display table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Company name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for company in companies %}
+                                <tr>
+                                    <td>{{ company.name }}</td>
+                                    <td>{{ company.email }}</td>
+                                    <td>{{ company.phone }}</td>
+                                    <td>{{ company.address }}</td>
+                                    <td>{{ company.city }}</td>
+                                    <td>{{ company.zipCode }}</td>
+                                    <td>
+                                        <a href="{{ path('edit_company_admin', {id:company.id}) }}"><button class="btn btn-secondary">Edit</button></a> 
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
+                                        <!-- Start Modal -->
+                                        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="Delete">Delete</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p class="text-muted">Are you sure you want delete this company?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <a href="{{ path('delete_company_admin', {id:company.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End Modal -->
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Company name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Zipcode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End recently added companies --> 
     </div>
 </div>
 <!-- End Contentbar --> 
-
 
 {% endblock %}
 

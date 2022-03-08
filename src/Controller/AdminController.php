@@ -34,10 +34,10 @@ class AdminController extends AbstractController
         $users = $repository->findByRole($role);
 
         $repository = $doctrine->getRepository(Contacts::class);
-        $contacts = $repository->findAll();
+        $contacts = $repository->findBy(array(), array('id'=>'DESC'), 3,0);
 
         $repository = $doctrine->getRepository(Companies::class);
-        $companies = $repository->findAll();
+        $companies = $repository->findBy(array(), array('id'=>'DESC'), 3,0);
 
         $calendars = $doctrine->getRepository(Events::class)->findAll();
         $rdvs = [];

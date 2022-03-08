@@ -1,6 +1,6 @@
 /*
 --------------------------------------------------------------
-  Template Name: Olian - Responsive Admin Dashboard Template
+  Template Name: Responsive Admin Dashboard Template
   File: Core JS File
 --------------------------------------------------------------
  */
@@ -49,23 +49,7 @@ $(document).ready(function() {
     };
     mediaSize();
     window.addEventListener('resize', mediaSize, false);
-    /* -- Switchery -- */
-    var setting_first = document.querySelector('.js-switch-setting-first');
-    var switchery = new Switchery(setting_first, { color: '#0442ba', size: 'small' });
-    var setting_second = document.querySelector('.js-switch-setting-second');
-    var switchery = new Switchery(setting_second, { color: '#0442ba', size: 'small' });
-    var setting_third = document.querySelector('.js-switch-setting-third');
-    var switchery = new Switchery(setting_third, { color: '#0442ba', size: 'small' });
-    var setting_fourth = document.querySelector('.js-switch-setting-fourth');
-    var switchery = new Switchery(setting_fourth, { color: '#0442ba', size: 'small' });
-    var setting_fifth = document.querySelector('.js-switch-setting-fifth');
-    var switchery = new Switchery(setting_fifth, { color: '#0442ba', size: 'small' });
-    var setting_sixth = document.querySelector('.js-switch-setting-sixth');
-    var switchery = new Switchery(setting_sixth, { color: '#0442ba', size: 'small' });
-    var setting_seventh = document.querySelector('.js-switch-setting-seventh');
-    var switchery = new Switchery(setting_seventh, { color: '#0442ba', size: 'small' });
-    var setting_eightth = document.querySelector('.js-switch-setting-eightth');
-    var switchery = new Switchery(setting_eightth, { color: '#0442ba', size: 'small' });
+ 
     /* -- Bootstrap Popover -- */
     $('[data-toggle="popover"]').popover();
     /* -- Bootstrap Tooltip -- */

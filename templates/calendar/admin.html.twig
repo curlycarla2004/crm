@@ -82,7 +82,6 @@
                 $('.modal').find('#ends-at').val(event.event.end);
                 $('.modal').find('#allday').val(event.event.allDay);
                 $('.modal').find('#user').val(event.event.extendedProps.User);
-                
               }
           })
 
@@ -131,6 +130,7 @@
         <div class="col-md-4 col-lg-4">
             <div class="widgetbar">
                 <a href="{{ path('event_new') }}"><button class="btn btn-primary"><i class="mdi mdi-account-plus"></i>Add Event</button></a>
+                <a href="{{ path('event_index') }}"><button class="btn btn-primary"><i class="ri-list-unordered"></i>See all events</button></a>
             </div>                        
         </div>
     </div>          
@@ -180,10 +180,12 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="save-event">Save changes</button>
                 </div>
+                
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->

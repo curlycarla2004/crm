@@ -63,6 +63,7 @@
               slotMinTime: "08:00:00",
               slotMaxTime: "19:00:00",
           })
+
           calendar.on('eventChange', (e) => {
               let url = `/api/${e.event.id}/edit`
               let donnees = {
@@ -72,7 +73,6 @@
                   "end": e.event.end,
                   "backgroundColor": e.event.backgroundColor,
                   "allDay": e.event.allDay
-
               }
               
               let xhr = new XMLHttpRequest

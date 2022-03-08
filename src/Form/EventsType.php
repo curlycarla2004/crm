@@ -24,7 +24,6 @@ class EventsType extends AbstractType
             ->add('description')
             ->add('background_color', ColorType::class)
             ->add('all_day')
-            ->add('User')
         ;
     }
 

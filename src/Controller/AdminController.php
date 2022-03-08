@@ -79,6 +79,9 @@ class AdminController extends AbstractController
      */
     public function admin_calendar_view(ManagerRegistry $doctrine): Response
     {
+        $repository = $doctrine->getRepository(Events::class);
+        $events = $repository->findAll();
+
         $calendars = $doctrine->getRepository(Events::class)->findAll();
         
         $rdvs = [];
@@ -104,6 +107,7 @@ class AdminController extends AbstractController
 
         return $this->render('calendar/admin.html.twig', [
             'data'=>$data,
+            'events' => $events
         ]);
     }
 

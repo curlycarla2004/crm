@@ -21,14 +21,16 @@ class EventController extends AbstractController
     /**
      * @Route("/", name="event_index", methods={"GET"})
      */
-    public function index(EventsRepository $eventsRepository, EntityManagerInterface $entityManager): Response
+    public function index(EventsRepository $eventsRepository, ManagerRegistry $doctrine): Response
     {
-        // $User = $this->getUser();
-        // dd($User);
-    
+        if($this->isGranted('ROLE_ADMIN')){
+            $events = $doctrine->getRepository(Events::class)->findAll();
+        }else {
+            $events = $doctrine->getRepository(Events::class)->findBy(["User"=>$this->getUser()->getId()]);
+        }
+
         return $this->render('event/index.html.twig', [
-            // 'events' => $eventsRepository->findAll(),
-            'events' => $eventsRepository->findAll(),
+            'events' => $events,
         ]);
     }
 
@@ -49,20 +51,25 @@ class EventController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+            if($this->isGranted('ROLE_ADMIN')){
+                return $this->redirectToRoute('admin_calendar');
+            }else {
+                return $this->redirectToRoute('calendar');
+            }
         }
 
         return $this->renderForm('event/new.html.twig', [
             'event' => $event,
-            'form' => $form,
+            'form' => $form
         ]);
     }
 
     /**
      * @Route("/{id}", name="event_show", methods={"GET"})
      */
-    public function show(Events $event): Response
+    public function show(Events $event, ManagerRegistry $doctrine, $id): Response
     {
+
         return $this->render('event/show.html.twig', [
             'event' => $event,
         ]);
@@ -78,14 +85,18 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-            return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+            
+            if($this->isGranted('ROLE_ADMIN')){
+                return $this->redirectToRoute('admin_calendar');
+            }else {
+                return $this->redirectToRoute('calendar');
+            }
+            
         }
-
 
         return $this->renderForm('event/edit.html.twig', [
             'event' => $event,
-            'form' => $form,
+            'form' => $form
         ]);
     }
 
@@ -99,6 +110,10 @@ class EventController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
+        if($this->isGranted('ROLE_ADMIN')){
+            return $this->redirectToRoute('admin_calendar');
+        }else {
+            return $this->redirectToRoute('calendar');
+        }
     }
 }

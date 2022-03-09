@@ -23,6 +23,14 @@ class ApiController extends AbstractController
     }
 
     /**
+     * Edition of calendar events
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @param $events
+     * 
+     * @return Response
+     * 
      * @Route("/api/{id}/edit", name="api_event_edit", methods={"PUT"} )
      */
     public function majEvent(?Events $events, Request $request, ManagerRegistry $doctrine): Response
@@ -61,8 +69,6 @@ class ApiController extends AbstractController
         }else{
             return new Response('Données incompletes', 404);
         }
-
-
 
         return $this->render('api/index.html.twig', [
             'controller_name' => 'ApiController',

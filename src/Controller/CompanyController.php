@@ -12,6 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class CompanyController extends AbstractController
 {
     /**
+     * See list of companies as User
+     * @param ManagerRegistry $doctrine
+     * 
+     * @return Response
+     * 
      * @Route("/profile/company", name="company")
      */
     public function index(ManagerRegistry $doctrine): Response
@@ -24,6 +29,10 @@ class CompanyController extends AbstractController
     }
 
      /**
+      * Create company form as User
+      *
+      * @return Response
+      * 
      * @Route("/profile/create_company", name="create_company")
      */
     public function create(): Response
@@ -35,11 +44,17 @@ class CompanyController extends AbstractController
     }
 
     /**
+     * Submission of company form as User
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * 
+     * @return Response
+     * 
      * @Route("/profile/add_company_form", name="add_company_form")
      */
     public function add_company_form(ManagerRegistry $doctrine, Request $request): Response
     {
-
         $manager = $doctrine->getManager();
         $company = new Companies();
         $company->setName($request->request->get('name'));
@@ -60,6 +75,13 @@ class CompanyController extends AbstractController
     }
 
      /**
+      * Edit company info as User
+      *
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/profile/edit_company/{id}", name="edit_company")
      */
     public function edit(ManagerRegistry $doctrine, int $id): Response
@@ -78,6 +100,14 @@ class CompanyController extends AbstractController
     }
 
      /**
+      * Updating the edit comapny form as User
+      *
+      * @param ManagerRegistry $doctrine
+      * @param Request $request
+      * @param $id
+
+      * @return Response
+
      * @Route("/profile/update_company/{id}", name="update_company")
      */
     public function update(Request $request, ManagerRegistry $doctrine, $id): Response
@@ -99,7 +129,6 @@ class CompanyController extends AbstractController
         if ($address = $request->request->get('address')) {
             $company->setAddress($address);
         }
-
         if ($city = $request->request->get('city')) {
             $company->setCity($city);
         }
@@ -113,19 +142,22 @@ class CompanyController extends AbstractController
             $company->setPhone($phone);
         }
 
-
         // Save
         $doctrine->getManager()->flush();
-
         $this->addFlash('success', 'The company information has been edited.');
-
         return $this->redirectToRoute('company');
     }
 
      /**
+      * Delete company as User
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/profile/delete_company/{id}", name="delete_company")
      */
-    public function delete(Request $request, ManagerRegistry $doctrine, $id): Response
+    public function delete(ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(Companies::class);
         $company = $repository->find($id);
@@ -137,12 +169,9 @@ class CompanyController extends AbstractController
 
         // Remove
         $entityManager->remove($company);
-
         // Commit
         $entityManager->flush();
-
         $this->addFlash('message', 'Company has been deleted');
-
         return $this->redirectToRoute('company');
     }
 }

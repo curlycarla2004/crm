@@ -7,8 +7,6 @@ use App\Entity\Contacts;
 use App\Entity\Events;
 use App\Entity\User;
 use App\Form\UserType;
-use App\Repository\EventsRepository;
-use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,9 +19,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
     /**
+     * Admin dashboard
+     * 
+     * @param ManagerRegistry $doctrine
+     * 
+     * @return Response
+     * 
      * @Route("/home", name="admin_home")
      */
-    public function index(ManagerRegistry $doctrine, Request $request): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
         $hasAccess = $this->isGranted('ROLE_ADMIN');
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -67,7 +71,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    // Header
+    // Admin Header
     public function header(ManagerRegistry $doctrine){
         
         return $this->render('site/header-admin.html.twig' , [
@@ -75,6 +79,11 @@ class AdminController extends AbstractController
     }
 
     /**
+     * View admin calendar
+     * 
+     * @param ManagerRegistry $doctrine
+     * @return Response
+     * 
      * @Route("/calendar", name="admin_calendar")
      */
     public function admin_calendar_view(ManagerRegistry $doctrine): Response
@@ -99,7 +108,6 @@ class AdminController extends AbstractController
                 'backgroundColor' =>$calendar->getBackgroundColor(),
                 'allDay' =>$calendar->getAllDay(),
                 'User' => $user->getFirstName()
-
             ];
         }
 
@@ -112,6 +120,11 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Admin Contact list
+     * 
+     * @param ManagerRegistry $doctrine
+     * @return Response
+     * 
      * @Route("/contact", name="contact_admin")
      */
     public function admin_contact( ManagerRegistry $doctrine): Response
@@ -135,6 +148,9 @@ class AdminController extends AbstractController
     }
 
       /**
+       * Admin create contact formulaire
+       * @return Response
+       * 
      * @Route("/create_contact", name="create_contact_admin")
      */
     public function create_admin(): Response
@@ -144,11 +160,16 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/add_contact_form", name="add_contact_form_admin")
+     * Submission form for adding contact as Admin
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @return Response
+     * 
+     * @Route("/add_contact_form", name="add_contact_form_admin", methods={"POST"})
      */
     public function add_contact_form_admin(ManagerRegistry $doctrine, Request $request): Response
     {
-
         $manager = $doctrine->getManager();
         $contact = new Contacts();
         $contact->setFirstName($request->request->get('firstname'));
@@ -170,9 +191,16 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Admin Edit contact form
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * 
      * @Route("/admin/edit_contact/{id}", name="edit_contact")
      */
-    public function edit(ManagerRegistry $doctrine, Request $request, int $id): Response
+    public function edit(ManagerRegistry $doctrine, int $id): Response
     {
         $repository = $doctrine->getRepository(Contacts::class);
         $contact = $repository->find($id);
@@ -186,7 +214,14 @@ class AdminController extends AbstractController
         ]);
     }
 
-     /**
+    /**
+     * Submission form for updating contact as Admin
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * 
      * @Route("/update_contact/{id}", name="update_contact")
      */
     public function update_contact(Request $request, ManagerRegistry $doctrine, $id): Response
@@ -223,20 +258,23 @@ class AdminController extends AbstractController
         if ($phone = $request->request->get('phone')) {
             $contact->setPhone($phone);
         }
-
-
         // Save
         $doctrine->getManager()->flush();
 
         $this->addFlash('message', 'The contact information has been edited.');
-
         return $this->redirectToRoute('contact_admin');
     }
 
      /**
+      * Delete contact as admin
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/delete_contact/{id}", name="delete_contact_admin")
      */
-    public function delete_contact(Request $request, ManagerRegistry $doctrine, $id): Response
+    public function delete_contact(ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(Contacts::class);
         $contact = $repository->find($id);
@@ -248,16 +286,19 @@ class AdminController extends AbstractController
 
         // Remove
         $entityManager->remove($contact);
-
         // Commit
         $entityManager->flush();
-
         $this->addFlash('message', 'Contact has been deleted.');
-
         return $this->redirectToRoute('contact_admin');
     }
 
     /**
+     * Change profile information as admin (the actual account)
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      * @param $user
+      *
+      * @return Response
      * @Route("/account/update/{id}", name="update_profile_admin", methods={"GET","POST"})
      */
     public function update_admin(Request $request, User $user, ManagerRegistry $doctrine, $id): Response
@@ -266,30 +307,24 @@ class AdminController extends AbstractController
         $user = $repository->find($id);
         
         $form = $this->createForm(UserType::class, $user);
-
         $form->handleRequest($request);
 
         if (is_null($user)) {
             return new Response('Not found 404', 404);
           }
-
         if ($firstName = $request->request->get('firstname')) {
             $user->setFirstName($firstName);
         }
         if ($lastName = $request->request->get('lastname')) {
             $user->setLastName($lastName);
         }
-
         if ($phone = $request->request->get('phone')) {
             $user->setPhone($phone);
         }
-        
         if ($image = $request->files->get('image')) {
             
             $destination=$this->getParameter('kernel.project_dir') . '/public/uploads';
-            
             $newFilename = md5(uniqid()) . '.' . $image->guessExtension();
-            
             $image->move(
                 $destination,
                 $newFilename
@@ -300,10 +335,16 @@ class AdminController extends AbstractController
         $doctrine->getManager()->flush();
         $this->addFlash('message', 'Profile has been updated');
         return $this->redirectToRoute('account', ['id'=>$user->getId()]);
-
     }
 
      /**
+      * View account information as Admin
+      *
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/account/{id}", name="account_admin")
      */
     public function account_admin(ManagerRegistry $doctrine, $id): Response
@@ -320,8 +361,15 @@ class AdminController extends AbstractController
         ]);
     }
 
-    // EMPLOYEES
+    // EMPLOYEES //
+
     /**
+     * Show all employees = users to admin
+     * 
+     * @param ManagerRegistry $doctrine
+     * 
+     * @return Response
+     * 
      * @Route("/employees", name="employees_admin")
      */
     public function show_users_admin(ManagerRegistry $doctrine):Response
@@ -338,41 +386,14 @@ class AdminController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("create_employee", name="create_employee")
-     */
-    public function create_employee(): Response
-    {
-        return $this->render('company/create_company.html.twig', [
-        ]);
-    }
-
-    /**
-     * @Route("/add_employee_form", name="add_employee")
-     */
-    public function add_employee_form(ManagerRegistry $doctrine, Request $request): Response
-    {
-
-        $manager = $doctrine->getManager();
-        $user = new User();
-        $user->setName($request->request->get('name'));
-        $user->setEmail($request->request->get('email'));
-        $user->setPhone($request->request->get('phone'));
-        $user->setAddress($request->request->get('address'));
-        $user->setCity($request->request->get('city'));
-        $user->setZipCode($request->request->get('zipCode'));
-        $user->setCountry($request->request->get('country'));
-        
-        $manager->persist($user);
-        $manager->flush();
-
-        $this->addFlash('message', 'New user has been added');
-        return $this->render('company/create_company.html.twig', [
-            'user' => $user,
-        ]);
-    }
 
      /**
+      * Edit employee information form - gotta finish
+      *
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      * @return Response
+      *
      * @Route("edit_employee/{id}", name="edit_employee")
      */
     public function edit_employee(ManagerRegistry $doctrine, int $id): Response
@@ -391,6 +412,12 @@ class AdminController extends AbstractController
     }
 
      /**
+      * Submission of edit employee form - gotta finish
+      *
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
      * @Route("/update_employee/{id}", name="update_employee")
      */
     public function update_employee(Request $request, ManagerRegistry $doctrine, $id): Response
@@ -412,7 +439,6 @@ class AdminController extends AbstractController
         if ($address = $request->request->get('address')) {
             $user->setAddress($address);
         }
-
         if ($city = $request->request->get('city')) {
             $user->setCity($city);
         }
@@ -425,20 +451,23 @@ class AdminController extends AbstractController
         if ($phone = $request->request->get('phone')) {
             $user->setPhone($phone);
         }
-
-
         // Save
         $doctrine->getManager()->flush();
-
         $this->addFlash('success', 'The company information has been edited.');
-
         return $this->redirectToRoute('employees_admin');
     }
 
      /**
+      * Delete Employee as admin - gotta finish
+      *
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/delete_employee/{id}", name="delete_employee")
      */
-    public function delete_employee(Request $request, ManagerRegistry $doctrine, $id): Response
+    public function delete_employee(ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(User::class);
         $user = $repository->find($id);
@@ -461,8 +490,16 @@ class AdminController extends AbstractController
 
 
 
-    // COMPANY
+    // COMPANIES //
+
     /**
+     * Show all companies to admin
+      * 
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/company", name="company_admin")
      */
     public function company_admin(ManagerRegistry $doctrine): Response
@@ -475,6 +512,9 @@ class AdminController extends AbstractController
     }
 
      /**
+      * Create company form as admin
+      * @return Response
+      *
      * @Route("create_company", name="create_company_admin")
      */
     public function create(): Response
@@ -486,11 +526,17 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Submission add company form as admin
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * 
+     * @return Response
+     * 
      * @Route("/add_company_form", name="add_company_form_admin")
      */
     public function add_company_form(ManagerRegistry $doctrine, Request $request): Response
     {
-
         $manager = $doctrine->getManager();
         $company = new Companies();
         $company->setName($request->request->get('name'));
@@ -511,6 +557,12 @@ class AdminController extends AbstractController
     }
 
      /**
+      * Edit company form as admin
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("edit_company/{id}", name="edit_company_admin")
      */
     public function edit_company_admin(ManagerRegistry $doctrine, int $id): Response
@@ -529,6 +581,14 @@ class AdminController extends AbstractController
     }
 
      /**
+      * Submission of edit comapny form as admin
+      *
+      * @param ManagerRegistry $doctrine
+      * @param Request $request
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/update_company/{id}", name="update_company_admin")
      */
     public function update_company_admin(Request $request, ManagerRegistry $doctrine, $id): Response
@@ -550,7 +610,6 @@ class AdminController extends AbstractController
         if ($address = $request->request->get('address')) {
             $company->setAddress($address);
         }
-
         if ($city = $request->request->get('city')) {
             $company->setCity($city);
         }
@@ -564,19 +623,22 @@ class AdminController extends AbstractController
             $company->setPhone($phone);
         }
 
-
         // Save
         $doctrine->getManager()->flush();
-
         $this->addFlash('success', 'The company information has been edited.');
-
         return $this->redirectToRoute('company');
     }
 
      /**
+      * Delete company as admin
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      *
+      * @return Response
+      *
      * @Route("/delete_company/{id}", name="delete_company_admin")
      */
-    public function delete_company_admin(Request $request, ManagerRegistry $doctrine, $id): Response
+    public function delete_company_admin(ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(Companies::class);
         $company = $repository->find($id);
@@ -588,12 +650,9 @@ class AdminController extends AbstractController
 
         // Remove
         $entityManager->remove($company);
-
         // Commit
         $entityManager->flush();
-
         $this->addFlash('message', 'Company has been deleted');
-
         return $this->redirectToRoute('company');
     }
 }

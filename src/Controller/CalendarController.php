@@ -3,9 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Events;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Repository\EventsRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +11,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class CalendarController extends AbstractController
 {
      /**
+      * See calendar and its events as a User
+      * @param ManagerRegistry $doctrine
+      *
+      * @return Response
+      *
      * @Route("/profile/calendar", name="calendar")
      */
-    public function index(UserRepository $users, ManagerRegistry $doctrine): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
         $calendars = $doctrine->getRepository(Events::class)->findBy(["User"=>$this->getUser()->getId()]);
         $rdvs = [];
@@ -36,7 +38,6 @@ class CalendarController extends AbstractController
         }
 
         $data = json_encode($rdvs);
-
         return $this->render('calendar/index.html.twig', [
             'data'=>$data,
         ]);

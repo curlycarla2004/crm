@@ -14,7 +14,16 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/profile/account/update/{id}", name="update_profile", methods={"GET","POST"})
+     * Submission to update User profile
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @param $id
+     * @param $user
+     * 
+     * @return Response
+     * 
+     * @Route("/profile/account/update/{id}", name="update_profile", methods={"POST"})
      */
     public function update(Request $request, User $user, ManagerRegistry $doctrine, $id): Response
     {
@@ -35,17 +44,13 @@ class UserController extends AbstractController
         if ($lastName = $request->request->get('lastname')) {
             $user->setLastName($lastName);
         }
-
         if ($phone = $request->request->get('phone')) {
             $user->setPhone($phone);
         }
-        
         if ($image = $request->files->get('image')) {
             
             $destination=$this->getParameter('kernel.project_dir') . '/public/uploads';
-            
             $newFilename = md5(uniqid()) . '.' . $image->guessExtension();
-            
             $image->move(
                 $destination,
                 $newFilename
@@ -56,10 +61,16 @@ class UserController extends AbstractController
         $doctrine->getManager()->flush();
         $this->addFlash('message', 'Profile has been updated');
         return $this->redirectToRoute('account', ['id'=>$user->getId()]);
-
     }
 
      /**
+      * See his profile as User
+      *
+      * @param ManagerRegistry $doctrine
+      * @param $id
+      * 
+      * @return Response
+      *
      * @Route("/profile/account/{id}", name="account")
      */
     public function account(ManagerRegistry $doctrine, $id): Response
@@ -77,6 +88,12 @@ class UserController extends AbstractController
     }
 
     /**
+     * Show all employess as User
+     * 
+     * @param ManagerRegistry $doctrine
+     * 
+     * @return Response
+     * 
      * @Route("/profile/employees", name="employees")
      */
     public function show_users(ManagerRegistry $doctrine):Response
@@ -92,6 +109,4 @@ class UserController extends AbstractController
             'users'=>$users
         ]);
     }
-
-    
 }

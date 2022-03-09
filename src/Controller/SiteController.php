@@ -16,6 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class SiteController extends AbstractController
 {
     /**
+     * Dashboard of User
+     * @param ManagerRegistry $doctrine
+     * 
+     * @return Response
+     * 
      * @Route("/profile/site", name="site")
      */
     public function index(ManagerRegistry $doctrine): Response
@@ -27,10 +32,10 @@ class SiteController extends AbstractController
         $users = $repository->findByRole($role);
 
         $repository = $doctrine->getRepository(Contacts::class);
-        $contacts = $repository->findAll();
+        $contacts = $repository->findBy(array(), array('id'=>'DESC'), 3,0);
 
         $repository = $doctrine->getRepository(Companies::class);
-        $companies = $repository->findAll();
+        $companies = $repository->findBy(array(), array('id'=>'DESC'), 3,0);
 
         $calendars = $doctrine->getRepository(Events::class)->findBy(["User"=>$this->getUser()->getId()]);
 
@@ -63,16 +68,15 @@ class SiteController extends AbstractController
 
    
 
-    // Header
-    public function header(ManagerRegistry $doctrine){
-        // $repository = $doctrine->getRepository(User::class);
-        // $users = $repository->findBy(["first_name"=>$this->getUser()->getFirstName()]);
+    // Header of User
+    public function header(){
+
         $this->denyAccessUnlessGranted('ROLE_USER');
         return $this->render('site/header-user.html.twig' , [
         ]);
     }
 
-    // Footer
+    // Footer User and Admin
     public function footer(){
         return $this->render('site/header.html.twig' , [
         ]);

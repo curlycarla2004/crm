@@ -10,14 +10,11 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class LoginController extends AbstractController
 {
     /**
+     * Login route
      * @Route("/", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -30,6 +27,7 @@ class LoginController extends AbstractController
     }
 
     /**
+     * Logout route
      * @Route("/logout", name="app_logout", methods={"GET"})
      */
     public function logout(): void

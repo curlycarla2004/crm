@@ -15,6 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 class ContactController extends AbstractController
 {
     /**
+     * List of contacts as User
+     * @param ManagerRegistry $doctrine
+     * 
+     * @return Response
+     * 
      * @Route("/profile/contact", name="contact")
      */
     public function index( ManagerRegistry $doctrine): Response
@@ -38,6 +43,10 @@ class ContactController extends AbstractController
     }
 
      /**
+      * Create contact form as User
+      *
+      * @return Response
+      * 
      * @Route("/profile/create_contact", name="create_contact")
      */
     public function create(): Response
@@ -47,22 +56,16 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/profile/add_contact_form", name="add_contact_form")
+     * Add a new contact as a User
+     * 
+     * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @return Response
+     * 
+     * @Route("/profile/add_contact_form", name="add_contact_form", methods={"POST"})
      */
     public function add_contact_form(ManagerRegistry $doctrine, Request $request): Response
     {
-
-        $form = $this->createForm(ContactsType::class);
-
-        $form->submit($request->request->all());
-
-        // if (!$form->isValid()) { //validate form info in UserFormType
-        //     $errors = $form->getErrors(true); // Array of Error
-        //     foreach ($errors as $error) {
-        //         $this->addFlash('error', $error->getMessage());
-        //     }
-        //     return $this->redirectToRoute('create_contact');
-        // }
         $manager = $doctrine->getManager();
         $contact = new Contacts();
         $contact->setFirstName($request->request->get('firstname'));

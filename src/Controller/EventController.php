@@ -19,14 +19,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class EventController extends AbstractController
 {
     /**
+     * See list of all events as User or Admin
+     *  @param ManagerRegistry $doctrine
+     * 
+     * @return Response
+     * 
      * @Route("/", name="event_index", methods={"GET"})
      */
-    public function index(EventsRepository $eventsRepository, ManagerRegistry $doctrine): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
         if($this->isGranted('ROLE_ADMIN')){
             $events = $doctrine->getRepository(Events::class)->findAll();
         }else {
-            $events = $doctrine->getRepository(Events::class)->findBy(["User"=>$this->getUser()->getId()]);
+            $events = $doctrine->getRepository(Events::class)->findBy(["User"=>$this->getUser()]);
         }
 
         return $this->render('event/index.html.twig', [
@@ -35,6 +40,13 @@ class EventController extends AbstractController
     }
 
     /**
+     * Add new Event as Admin or User
+     * 
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * 
+     * @return Response
+     * 
      * @Route("/new", name="event_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -65,20 +77,32 @@ class EventController extends AbstractController
     }
 
     /**
+     * Show individual event as User or Admin
+     * 
+     * @param $event
+     * 
+     * @return Response
+     * 
      * @Route("/{id}", name="event_show", methods={"GET"})
      */
-    public function show(Events $event, ManagerRegistry $doctrine, $id): Response
+    public function show(Events $event): Response
     {
-
         return $this->render('event/show.html.twig', [
             'event' => $event,
         ]);
     }
 
     /**
+     * Edit individual event as User or Admin
+     * 
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @param $event
+     * 
+     * @return Response
      * @Route("/{id}/edit", name="event_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Events $event, EntityManagerInterface $entityManager, ManagerRegistry $doctrine): Response
+    public function edit(Request $request, Events $event, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EventsType::class, $event);
         $form->handleRequest($request);
@@ -101,6 +125,14 @@ class EventController extends AbstractController
     }
 
     /**
+     * Delete individual event as User or Admin
+     * 
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @param $event
+     * 
+     * @return Response
+     * 
      * @Route("/{id}", name="event_delete", methods={"POST"})
      */
     public function delete(Request $request, Events $event, EntityManagerInterface $entityManager): Response

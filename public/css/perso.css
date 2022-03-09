@@ -1,5 +1,6 @@
 :root{
     --primary: #21409a;
+    --light-blue: #93c7ec;
 }
 
 /* Background imagine login form */
@@ -80,3 +81,16 @@
 
 /* Buttons of full calendar responsive on mobile */
 @media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {font-size: 60%}}
+
+/* Image size in Profile section */
+.profilebox img {
+    width: 250px !important;
+}
+
+.blue{
+    color: var(--primary);
+}
+
+.light-blue{
+    background-color: var(--light-blue) !important;
+}

@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contacts {{ app.user.FirstName }}!{% endblock %}
-
-
+{% block title %}Create new company{% endblock %}
 
 {% block body %}
 
@@ -31,6 +29,7 @@
 <!-- End Breadcrumbbar -->
 
 <br>
+
 <!-- Show errors -->
 {% for label, messages in app.flashes %}
     {% for message in messages %}
@@ -111,11 +110,7 @@
     <!-- End row -->
 </div>
 <!-- End Contentbar -->
-
-
 {% endblock %}
-
-
 
 {% block javascripts %}
     <!-- Start js -->        

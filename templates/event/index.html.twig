@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Events index{% endblock %}
+{% block title %}Events summary{% endblock %}
 
 {% block body %}
 
@@ -40,7 +40,6 @@
                 <th>Start</th>
                 <th>End</th>
                 <th>All_day</th>
-                <th>Background_color</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -52,7 +51,6 @@
                 <td>{{ event.start ? event.start|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ event.end ? event.end|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ event.allDay ? 'Yes' : 'No' }}</td>
-                <td>{{ event.backgroundColor }}</td>
                 <td>
                     <a href="{{ path('event_show', {'id': event.id}) }}">show</a>
                     <a href="{{ path('event_edit', {'id': event.id}) }}">edit</a>

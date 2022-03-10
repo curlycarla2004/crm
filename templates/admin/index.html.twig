@@ -136,8 +136,7 @@
                                             <th>Last Name</th>
                                             <th>Phone</th>
                                             <th>Email</th>
-                                            <th>Image</th>
-                                            <th>Action</th>                                                
+                                            <th>Image</th>                                              
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -148,31 +147,6 @@
                                             <td>{{ user.phone }}</td>
                                             <td>{{ user.email }}</td>
                                             <td><img src="{{asset('uploads/' ~ user.image )}}" class="img-fluid mb-3" alt="profile" style="max-width: 50%;"></td>
-                                            <td>
-                                                <a href="{{ path('edit_company', {id:user.id}) }}"><button class="btn btn-secondary">Edit</button></a> 
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
-                                                <!-- Start Modal -->
-                                                <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="Delete">Delete</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p class="text-muted">Are you sure you want delete this company?</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                <a href="{{ path('delete_company', {id:user.id}) }}"><button type="button" class="btn btn-primary">Delete</button></a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- End Modal -->
-                                            </td>
                                         </tr>{% endfor %}
                                     </tbody>
                                 </table>
@@ -219,9 +193,9 @@
                                     <td>{{ contact.zipCode }}</td>
                                     <td>
                                         <a href="{{ path('edit_contact', {id:contact.id}) }}"><button class="btn btn-secondary">Edit</button></a>
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete-contact">Delete</button>
                                         <!-- Start Modal -->
-                                        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+                                        <div class="modal fade" id="delete-contact" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -294,9 +268,9 @@
                                     <td>{{ company.zipCode }}</td>
                                     <td>
                                         <a href="{{ path('edit_company_admin', {id:company.id}) }}"><button class="btn btn-secondary">Edit</button></a> 
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete">Delete</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#delete-company">Delete</button>
                                         <!-- Start Modal -->
-                                        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
+                                        <div class="modal fade" id="delete-company" tabindex="-1" role="dialog" aria-labelledby="Delete" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">

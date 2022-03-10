@@ -24,8 +24,6 @@ class ContactController extends AbstractController
      */
     public function index( ManagerRegistry $doctrine): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         $repository = $doctrine->getRepository(Contacts::class);
         $contacts = $repository->findAll();
 

@@ -626,7 +626,7 @@ class AdminController extends AbstractController
         // Save
         $doctrine->getManager()->flush();
         $this->addFlash('success', 'The company information has been edited.');
-        return $this->redirectToRoute('company');
+        return $this->redirectToRoute('company_admin');
     }
 
      /**
@@ -636,16 +636,16 @@ class AdminController extends AbstractController
       *
       * @return Response
       *
-     * @Route("/delete_company/{id}", name="delete_company_admin")
+     * @Route("/delete_company_admin/{id}", name="delete_company_admin")
      */
     public function delete_company_admin(ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(Companies::class);
         $company = $repository->find($id);
         $entityManager = $doctrine->getManager();
-
-        if (is_null($company)) {
+        if (is_null($company)) { 
             return new Response('Not found 404', 404);
+           
         }
 
         // Remove
@@ -653,6 +653,6 @@ class AdminController extends AbstractController
         // Commit
         $entityManager->flush();
         $this->addFlash('message', 'Company has been deleted');
-        return $this->redirectToRoute('company');
+        return $this->redirectToRoute('company_admin');
     }
 }

@@ -17,3 +17,7 @@ MLD
 UML
 
 ![uml-karla-1](https://user-images.githubusercontent.com/57147268/157342616-122a60e5-c51b-490a-9f23-008c1d5c9cd3.png)
+
+Presentation CRM
+[CRM-KarlaGergelova.pptx](https://github.com/curlycarla2004/crm/files/8219129/CRM-KarlaGergelova.pptx)
+

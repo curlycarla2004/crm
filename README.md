@@ -2,6 +2,9 @@ CRM - 3project CCI campus
 
 https://crm.karlagergelova.com/
 
+PPT Presentation CRM
+[CRM-KarlaGergelova.pptx](https://github.com/curlycarla2004/crm/files/8219129/CRM-KarlaGergelova.pptx)
+
 Diagramme de Gantt
 
 <img width="1554" alt="Screenshot 2022-03-08 at 10 54 50" src="https://user-images.githubusercontent.com/57147268/157342553-66c63681-7f81-4f6a-a54b-e9337ad01dc7.png">
@@ -18,6 +21,5 @@ UML
 
 ![uml-karla-1](https://user-images.githubusercontent.com/57147268/157342616-122a60e5-c51b-490a-9f23-008c1d5c9cd3.png)
 
-Presentation CRM
-[CRM-KarlaGergelova.pptx](https://github.com/curlycarla2004/crm/files/8219129/CRM-KarlaGergelova.pptx)
+
 
